@@ -1,0 +1,34 @@
+---
+# tasks file for collect_sysstat
+
+- name: stop active collect_sysstat commands
+  shell: "pkill {{ item }}"
+  register: pkill_result
+  failed_when: pkill_result.rc > 1
+  loop:
+    - iostat
+    - sar
+    - top
+
+- name: start collect_sysstat iostat
+  shell: "nohup iostat -N -tkdx {{ collect_sysstat_interval }} > /tmp/collect_sysstat.iostat.txt 2>&1 < /dev/null &"
+  when: collect_sysstat_mode == "start"
+
+- name: start collect_sysstat sar
+  shell: "nohup sar -n DEV -BdrquW -p {{ collect_sysstat_interval }} > /tmp/collect_sysstat.sar.txt 2>&1 < /dev/null &"
+  when: collect_sysstat_mode == "start"
+
+- name: start collect_sysstat top
+  shell: "nohup top -bH -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top.txt 2>&1 < /dev/null &"
+  when: collect_sysstat_mode == "start"
+
+- name: fetch collect_sysstat output
+  fetch:
+    src: "/tmp/collect_sysstat.{{ item }}.txt"
+    dest: '{{ collect_sysstat_dir }}'
+  loop:
+    - iostat
+    - sar
+    - top
+  when: collect_sysstat_mode == "gather"
+

@@ -1,0 +1,6 @@
+---
+# vars file for get_sysinfo
+
+# directory to fetch system info into; expected to be overridden
+get_sysinfo_dir: /tmp
+

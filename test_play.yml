@@ -1,0 +1,22 @@
+
+
+---
+- hosts: all
+
+  tasks:
+
+  - name: set run directory
+    set_fact:
+      run_dir: /root/ansible/run_ts
+
+  - name: create run directory
+    local_action:
+      module: file
+      path: '{{ run_dir }}'
+      state: directory
+
+  - include_role:
+      name: fio_1client_seqio
+    vars:
+      collect_sysstat_mode: start
+

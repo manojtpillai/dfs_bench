@@ -1,0 +1,11 @@
+---
+# vars file for collect_sysstat
+
+# default monitoring interval
+collect_sysstat_interval: 10
+
+# directory to fetch output files into; expected to be overridden
+collect_sysstat_dir: /tmp
+
+# start monitoring or gather
+collect_sysstat_mode: start
