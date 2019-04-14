@@ -18,5 +18,5 @@
   - include_role:
       name: fio_1client_seqio
     vars:
-      collect_sysstat_mode: start
+      fio_1client_seqio_resdir: '{{ run_dir }}'
 
