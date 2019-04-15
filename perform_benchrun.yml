@@ -43,7 +43,9 @@
   - include_role:
       name: fio_1client_seqio
     vars: 
-      get_sysinfo_dir: '{{ run_dir }}'
+      fio_1client_seqio_resdir: '{{ run_dir }}'
+      fio_1client_seqio_client: '{{ groups.clients[0] }}'
+      fio_1client_seqio_servers: '{{ groups.servers }}'
 
   - include_role:
       name: get_sysinfo

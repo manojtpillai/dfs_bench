@@ -2,5 +2,8 @@
 # vars file for fio_1client_seqio
 
 fio_1client_seqio_mntpt: /mnt/dfsmnt
-fio_1client_seqio_resdir: /tmp
+
+# fio_1client_seqio_resdir: dest for output, passed from calling playbook
+# fio_1client_seqio_client: client hostname, passed from calling playbook
+# fio_1client_seqio_servers: list of servers, passed from calling playbook
 

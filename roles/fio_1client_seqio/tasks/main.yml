@@ -3,36 +3,39 @@
 
 - name: setup timestamps for tests in fio_1client_seqio
   shell: 'echo "fio_1client_seqio timestamps: " > /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark start of write test
   shell: 'echo -n "starting write test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
 - name: fio sequential write
   shell: 'fio --name writetest --ioengine=sync --rw=write --direct=0 --create_on_open=1 --end_fsync=1 --bs=128K --directory={{ fio_1client_seqio_mntpt }} --filename_format=f.\$jobnum.\$filenum --filesize=1g --size=1g --numjobs=2 --output=/tmp/fio_1client_seqio.write.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark end of write test
   shell: 'echo -n "write test done: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
-# TODO: also on servers
-- name: drop caches before fio sequential read 
+- name: drop client cache before fio sequential read 
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
+
+- name: drop server caches before fio sequential read 
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in fio_1client_seqio_servers
 
 - name: mark start of read test
   shell: 'echo -n "starting read test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
 - name: fio sequential read 
   shell: 'fio --name readtest --ioengine=sync --rw=read --direct=0 --bs=128K --directory={{ fio_1client_seqio_mntpt }} --filename_format=f.\$jobnum.\$filenum --filesize=1g --size=1g --numjobs=2 --output=/tmp/fio_1client_seqio.read.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark end of read test
   shell: 'echo -n "read test done: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
 - name: collect fio output 
   fetch:
@@ -42,5 +45,5 @@
     - write
     - read
     - ts
-  when: inventory_hostname == groups.clients[0]
+  when: inventory_hostname == fio_1client_seqio_client
 
