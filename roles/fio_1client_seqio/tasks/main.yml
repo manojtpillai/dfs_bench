@@ -9,8 +9,26 @@
   shell: 'echo -n "starting write test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
+- name: create fio sequential write job
+  blockinfile:
+    path: /tmp/fio_1client_seqio.write.job
+    create: yes
+    block: |
+      [writetest]
+      ioengine=sync
+      rw=write
+      create_on_open=1
+      end_fsync=1
+      bs=128k
+      directory={{ fio_1client_seqio_mntpt }}
+      filename_format=f.$jobnum.$filenum
+      numjobs=2
+      filesize=1g
+      size=1g
+  when: inventory_hostname == fio_1client_seqio_client
+
 - name: fio sequential write
-  shell: 'fio --name writetest --ioengine=sync --rw=write --direct=0 --create_on_open=1 --end_fsync=1 --bs=128K --directory={{ fio_1client_seqio_mntpt }} --filename_format=f.\$jobnum.\$filenum --filesize=1g --size=1g --numjobs=2 --output=/tmp/fio_1client_seqio.write.txt'
+  shell: 'fio /tmp/fio_1client_seqio.write.job --output=/tmp/fio_1client_seqio.write.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark end of write test
@@ -29,8 +47,24 @@
   shell: 'echo -n "starting read test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
-- name: fio sequential read 
-  shell: 'fio --name readtest --ioengine=sync --rw=read --direct=0 --bs=128K --directory={{ fio_1client_seqio_mntpt }} --filename_format=f.\$jobnum.\$filenum --filesize=1g --size=1g --numjobs=2 --output=/tmp/fio_1client_seqio.read.txt'
+- name: create fio sequential read job
+  blockinfile:
+    path: /tmp/fio_1client_seqio.read.job
+    create: yes
+    block: |
+      [readtest]
+      ioengine=sync
+      rw=read
+      bs=128k
+      directory={{ fio_1client_seqio_mntpt }}
+      filename_format=f.$jobnum.$filenum
+      numjobs=2
+      filesize=1g
+      size=1g
+  when: inventory_hostname == fio_1client_seqio_client
+
+- name: fio sequential read
+  shell: 'fio /tmp/fio_1client_seqio.read.job --output=/tmp/fio_1client_seqio.read.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark end of read test
@@ -39,11 +73,13 @@
 
 - name: collect fio output 
   fetch:
-    src: "/tmp/fio_1client_seqio.{{ item }}.txt"
+    src: "/tmp/fio_1client_seqio.{{ item }}"
     dest: '{{ fio_1client_seqio_resdir }}'
   loop:
-    - write
-    - read
-    - ts
+    - write.out.txt
+    - read.out.txt
+    - ts.txt
+    - write.job
+    - read.job
   when: inventory_hostname == fio_1client_seqio_client
 
