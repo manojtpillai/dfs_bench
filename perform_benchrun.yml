@@ -41,12 +41,14 @@
       collect_sysstat_mode: start
 
   - include_role:
-      name: get_sysinfo
+      name: fio_1client_seqio
     vars: 
       get_sysinfo_dir: '{{ run_dir }}'
 
-  - pause:
-      seconds: 30
+  - include_role:
+      name: get_sysinfo
+    vars: 
+      get_sysinfo_dir: '{{ run_dir }}'
 
   - include_role:
       name: collect_sysstat

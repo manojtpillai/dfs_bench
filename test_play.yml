@@ -7,7 +7,7 @@
 
   - name: set run directory
     set_fact:
-      run_dir: /root/ansible/run_ts
+      run_dir: /tmp/run_ts
 
   - name: create run directory
     local_action:
