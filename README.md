@@ -7,9 +7,9 @@ This project is in its early days. The aim is to create simple ansible playbooks
 
 There are two types of ansible roles at this time:
 
-1. A single performance benchmark. An example is fio_client_seqio, which does an fio sequential write and read test.
+1. A single performance benchmark. An example is fio_1client_seqio, which does an fio sequential write and read test.
 
-1. A helper role. An example is collect_systat, which is used to get output of monitoring utilities for the duration of the benchmark run, and is useful in analyzing results from the benchmark.
+1. A helper role. An example is collect_sysstat, which is used to get output of monitoring utilities for the duration of the benchmark run, and is useful in analyzing results from the benchmark.
 
 A typical playbook, like perform_benchrun.yml, proceeds as follows:
 
