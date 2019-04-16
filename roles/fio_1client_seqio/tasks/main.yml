@@ -19,16 +19,16 @@
       rw=write
       create_on_open=1
       end_fsync=1
-      bs=128k
+      bs={{ fio_1client_seqio_bs_kb }}k
       directory={{ fio_1client_seqio_mntpt }}
       filename_format=f.$jobnum.$filenum
-      numjobs=2
-      filesize=1g
-      size=1g
+      numjobs={{ fio_1client_seqio_njobs }}
+      filesize={{ fio_1client_seqio_fsz_gb }}g
+      size={{ fio_1client_seqio_fsz_gb }}g
   when: inventory_hostname == fio_1client_seqio_client
 
 - name: fio sequential write
-  shell: 'fio /tmp/fio_1client_seqio.write.job --output=/tmp/fio_1client_seqio.write.txt'
+  shell: 'fio /tmp/fio_1client_seqio.write.job --output=/tmp/fio_1client_seqio.write.out.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark end of write test
@@ -55,16 +55,16 @@
       [readtest]
       ioengine=sync
       rw=read
-      bs=128k
+      bs={{ fio_1client_seqio_bs_kb }}k
       directory={{ fio_1client_seqio_mntpt }}
       filename_format=f.$jobnum.$filenum
-      numjobs=2
-      filesize=1g
-      size=1g
+      numjobs={{ fio_1client_seqio_njobs }}
+      filesize={{ fio_1client_seqio_fsz_gb }}g
+      size={{ fio_1client_seqio_fsz_gb }}g
   when: inventory_hostname == fio_1client_seqio_client
 
 - name: fio sequential read
-  shell: 'fio /tmp/fio_1client_seqio.read.job --output=/tmp/fio_1client_seqio.read.txt'
+  shell: 'fio /tmp/fio_1client_seqio.read.job --output=/tmp/fio_1client_seqio.read.out.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
 - name: mark end of read test
