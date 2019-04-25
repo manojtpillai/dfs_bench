@@ -1,4 +1,4 @@
-# dfs_bench
+# dimir
 Performance benchmarking for distributed storage.
 
 This project is in its early days. The aim is to create simple ansible playbooks to help with performance analysis of distributed storage solutions, like ceph and gluster.
