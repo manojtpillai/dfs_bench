@@ -8,7 +8,8 @@
   loop:
     - iostat
     - sar
-    - top
+    - pidstat
+    - vmstat
 
 - name: start collect_sysstat iostat
   shell: "nohup iostat -N -tkdx {{ collect_sysstat_interval }} > /tmp/collect_sysstat.iostat.txt 2>&1 < /dev/null &"
@@ -19,7 +20,11 @@
   when: collect_sysstat_mode == "start"
 
 - name: start collect_sysstat top
-  shell: "nohup top -bH -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top.txt 2>&1 < /dev/null &"
+  shell: "nohup pidstat -t {{ collect_sysstat_interval }} > /tmp/collect_sysstat.pidstat.txt 2>&1 < /dev/null &"
+  when: collect_sysstat_mode == "start"
+
+- name: start collect_sysstat vmstat
+  shell: "nohup vmstat -t {{ collect_sysstat_interval }} > /tmp/collect_sysstat.vmstat.txt 2>&1 < /dev/null &"
   when: collect_sysstat_mode == "start"
 
 - name: fetch collect_sysstat output
@@ -29,6 +34,7 @@
   loop:
     - iostat
     - sar
-    - top
+    - pidstat
+    - vmstat
   when: collect_sysstat_mode == "gather"
 

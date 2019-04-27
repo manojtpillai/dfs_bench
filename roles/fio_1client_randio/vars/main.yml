@@ -1,0 +1,29 @@
+---
+# vars file for fio_1client_randio
+
+# where distributed fs is mounted on the client
+fio_1client_randio_mntpt: /mnt/dfsmnt
+
+# number of fio jobs
+fio_1client_randio_njobs: 2
+
+# size of file written/read by each job
+fio_1client_randio_fsz_gb: 1
+
+# block size for random write/read
+fio_1client_randio_bs_kb: 4
+
+# iodepth per fio random job 
+fio_1client_randio_iodepth: 32
+
+# runtime for random I/O job 
+fio_1client_randio_run_sec: 60
+
+# block size for seq write
+fio_1client_randio_sbs_kb: 128
+
+# fio_1client_randio_resdir: dest for output, passed from calling playbook
+# fio_1client_randio_client: client hostname, passed from calling playbook
+# fio_1client_randio_servers: list of servers, passed from calling playbook
+
+...

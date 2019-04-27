@@ -18,9 +18,9 @@
       state: directory
 
   - include_role:
-      name: fio_1client_seqio
+      name: fio_1client_randio
     vars:
-      fio_1client_seqio_resdir: '{{ run_dir }}'
-      fio_1client_seqio_client: '{{ groups.clients[0] }}'
-      fio_1client_seqio_servers: '{{ groups.servers }}'
+      fio_1client_randio_resdir: '{{ run_dir }}'
+      fio_1client_randio_client: '{{ groups.clients[0] }}'
+      fio_1client_randio_servers: '{{ groups.servers }}'
 ...
