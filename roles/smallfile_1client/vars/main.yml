@@ -7,7 +7,7 @@ smallfile_1client_binpath: '/root/benchmarks/smallfile/smallfile-master'
 # path for smallfile benchmark
 smallfile_bench: '{{ smallfile_1client_binpath }}/smallfile_cli.py'
 
-# where distributed fs is mounted on the client
+# where test fs is mounted on the client
 smallfile_1client_mntpt: /mnt/dfsmnt
 
 # number of threads

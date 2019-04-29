@@ -1,7 +1,7 @@
 ---
 # tasks file for smallfile_1client
 
-- name: setup directory structure
+- name: setup directory structure for smallfile tests
   file:
     path: '{{ smallfile_1client_mntpt }}/{{ item }}'
     state: directory
@@ -10,6 +10,16 @@
     - tarred
     - untarred
   when: inventory_hostname == smallfile_1client_client
+
+- name: set smallfile record size
+  set_fact:
+    smallfile_1client_recsz_kb: '{{ smallfile_1client_fsz_kb }}'
+  when: smallfile_1client_recsz_auto == true and smallfile_1client_fsz_kb < 1024
+
+- name: adjust smallfile record size
+  set_fact:
+    smallfile_1client_recsz_kb: 1024
+  when: smallfile_1client_recsz_auto == true and smallfile_1client_fsz_kb >= 1024
 
 - name: setup timestamps for tests in smallfile_1client
   shell: 'echo "smallfile_1client timestamps: " > /tmp/smallfile_1client.ts.txt'
@@ -20,11 +30,11 @@
   when: inventory_hostname == smallfile_1client_client
 
 - name: smallfile create
-  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --fsync y --operation create > /tmp/smallfile_1client.create.txt'
+  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --fsync y --operation create > /tmp/smallfile_1client.create.out.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: mark end of write test
-  shell: 'echo -n "write test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  shell: 'echo -n "create test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: drop client cache before smallfile read 
@@ -39,6 +49,49 @@
   shell: 'echo -n "starting read test:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
+- name: smallfile read
+  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --operation read > /tmp/smallfile_1client.read.out.txt'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: mark end of read test
+  shell: 'echo -n "read test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop client cache before small file tar 
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop server caches before small file tar 
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in smallfile_1client_servers
+
+- name: mark start of small file tar
+  shell: 'echo -n "starting tar test:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: small file tar
+  shell: 'tar -cf {{ smallfile_1client_mntpt }}/tarred/dataset.tar {{ smallfile_1client_mntpt }}/created'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: mark end of tar test
+  shell: 'echo -n "tar test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: try to cache data set to be untarred
+  shell: 'cat {{ smallfile_1client_mntpt }}/tarred/dataset.tar >> /dev/null'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: mark start of small file untar
+  shell: 'echo -n "starting untar test:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: small file untar
+  shell: 'tar -xf {{ smallfile_1client_mntpt }}/tarred/dataset.tar -C {{ smallfile_1client_mntpt }}/untarred'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: mark end of untar test
+  shell: 'echo -n "untar test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  when: inventory_hostname == smallfile_1client_client
 
 - name: collect smallfile output 
   fetch:
@@ -46,6 +99,7 @@
     dest: '{{ smallfile_1client_resdir }}'
   loop:
     - ts.txt
-    - create.txt
+    - create.out.txt
+    - read.out.txt
   when: inventory_hostname == smallfile_1client_client
 
