@@ -18,9 +18,9 @@
       state: directory
 
   - include_role:
-      name: fio_1client_randio
+      name: smallfile_1client
     vars:
-      fio_1client_randio_resdir: '{{ run_dir }}'
-      fio_1client_randio_client: '{{ groups.clients[0] }}'
-      fio_1client_randio_servers: '{{ groups.servers }}'
+      smallfile_1client_resdir: '{{ run_dir }}'
+      smallfile_1client_client: '{{ groups.clients[0] }}'
+      smallfile_1client_servers: '{{ groups.servers }}'
 ...

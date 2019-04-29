@@ -1,0 +1,32 @@
+---
+# vars file for smallfile_1client
+
+# path for smallfile benchmark
+smallfile_1client_binpath: '/root/benchmarks/smallfile/smallfile-master'
+
+# path for smallfile benchmark
+smallfile_bench: '{{ smallfile_1client_binpath }}/smallfile_cli.py'
+
+# where distributed fs is mounted on the client
+smallfile_1client_mntpt: /mnt/dfsmnt
+
+# number of threads
+smallfile_1client_nthrds: 2
+
+# number of files per thread
+smallfile_1client_nfiles: 8192
+
+# file size
+smallfile_1client_fsz_kb: 64
+
+# select record size automatically
+smallfile_1client_recsz_auto: true
+
+# record size, if auto is not true
+smallfile_1client_recsz_kb: 64
+
+# fio_1client_randio_resdir: dest for output, passed from calling playbook
+# fio_1client_randio_client: client hostname, passed from calling playbook
+# fio_1client_randio_servers: list of servers, passed from calling playbook
+
+...
