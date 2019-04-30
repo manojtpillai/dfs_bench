@@ -1,5 +1,5 @@
 ---
-# vars file for smallfile_1client
+# defaults file for smallfile_1client
 
 # path for smallfile benchmark
 smallfile_1client_binpath: '/root/benchmarks/smallfile/smallfile-master'
@@ -17,13 +17,23 @@ smallfile_1client_nthrds: 2
 smallfile_1client_nfiles: 8192
 
 # file size
-smallfile_1client_fsz_kb: 64
+smallfile_1client_fsz_kb: 32
 
 # select record size automatically
 smallfile_1client_recsz_auto: true
 
 # record size, if auto is not true
-smallfile_1client_recsz_kb: 64
+smallfile_1client_recsz_kb: 32
+
+# files per directory 
+smallfile_1client_dirsz: 100
+
+# name to search for in find-name test
+smallfile_1client_nametofind: "mtp.non_existent_name.non"
+
+# size to search for in find-size test
+smallfile_1client_sizetofind: "{{ smallfile_1client_fsz_kb|int * 2 }}"
+
 
 # fio_1client_randio_resdir: dest for output, passed from calling playbook
 # fio_1client_randio_client: client hostname, passed from calling playbook

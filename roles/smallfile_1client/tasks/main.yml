@@ -26,27 +26,27 @@
   when: inventory_hostname == smallfile_1client_client
 
 - name: mark start of create test
-  shell: 'echo -n "starting create test: " >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  shell: 'echo "starting create test: " `date` >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: smallfile create
-  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --fsync y --operation create > /tmp/smallfile_1client.create.out.txt'
+  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --files-per-dir {{ smallfile_1client_dirsz }} --fsync y --operation create > /tmp/smallfile_1client.create.out.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: mark end of write test
-  shell: 'echo -n "create test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  shell: 'echo "create test done:" `date` >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
-- name: drop client cache before smallfile read 
+- name: drop client cache for read
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
   when: inventory_hostname == smallfile_1client_client
 
-- name: drop server caches before smallfile read 
+- name: drop server caches for read
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
   when: inventory_hostname in smallfile_1client_servers
 
 - name: mark start of smallfile read
-  shell: 'echo -n "starting read test:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  shell: 'echo "starting read test:" `date` >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: smallfile read
@@ -54,43 +54,63 @@
   when: inventory_hostname == smallfile_1client_client
 
 - name: mark end of read test
-  shell: 'echo -n "read test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  shell: 'echo "read test done:" `date` >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
-- name: drop client cache before small file tar 
+- name: drop client cache for tar
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
   when: inventory_hostname == smallfile_1client_client
 
-- name: drop server caches before small file tar 
+- name: drop server caches for tar
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
   when: inventory_hostname in smallfile_1client_servers
 
-- name: mark start of small file tar
-  shell: 'echo -n "starting tar test:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
-  when: inventory_hostname == smallfile_1client_client
-
 - name: small file tar
-  shell: 'tar -cf {{ smallfile_1client_mntpt }}/tarred/dataset.tar {{ smallfile_1client_mntpt }}/created'
-  when: inventory_hostname == smallfile_1client_client
-
-- name: mark end of tar test
-  shell: 'echo -n "tar test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+  shell: 'echo "starting tar test:" `date` >> /tmp/smallfile_1client.ts.txt; tar -cf {{ smallfile_1client_mntpt }}/tarred/dataset.tar {{ smallfile_1client_mntpt }}/created; echo "tar test done:" `date` >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: try to cache data set to be untarred
   shell: 'cat {{ smallfile_1client_mntpt }}/tarred/dataset.tar >> /dev/null'
   when: inventory_hostname == smallfile_1client_client
 
-- name: mark start of small file untar
-  shell: 'echo -n "starting untar test:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
-  when: inventory_hostname == smallfile_1client_client
-
 - name: small file untar
-  shell: 'tar -xf {{ smallfile_1client_mntpt }}/tarred/dataset.tar -C {{ smallfile_1client_mntpt }}/untarred'
+  shell: 'echo "starting untar test:" `date` >> /tmp/smallfile_1client.ts.txt; tar -xf {{ smallfile_1client_mntpt }}/tarred/dataset.tar -C {{ smallfile_1client_mntpt }}/untarred; echo "untar test done:" `date` >> /tmp/smallfile_1client.ts.txt'
   when: inventory_hostname == smallfile_1client_client
 
-- name: mark end of untar test
-  shell: 'echo -n "untar test done:" >> /tmp/smallfile_1client.ts.txt; date >> /tmp/smallfile_1client.ts.txt'
+- name: drop client cache for find-name
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop server caches for find-name
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in smallfile_1client_servers
+
+- name: small file find name
+  shell: 'echo "starting find-name test:" `date` >> /tmp/smallfile_1client.ts.txt; find {{ smallfile_1client_mntpt }}/created -name "{{ smallfile_1client_nametofind }}"; echo "find-name test done:" `date` >> /tmp/smallfile_1client.ts.txt' 
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop client cache for find-size
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop server caches for find-size
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in smallfile_1client_servers
+
+- name: small file find size
+  shell: 'echo "starting find-size test:" `date` >> /tmp/smallfile_1client.ts.txt; find {{ smallfile_1client_mntpt }}/created -size "{{ smallfile_1client_sizetofind }}K"; echo "find-size test done:" `date` >> /tmp/smallfile_1client.ts.txt' 
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop client cache for rm
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname == smallfile_1client_client
+
+- name: drop server caches for rm
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in smallfile_1client_servers
+
+- name: small file rm
+  shell: 'echo "starting rm test:" `date` >> /tmp/smallfile_1client.ts.txt; rm -rf {{ smallfile_1client_mntpt }}/created; echo "rm test done:" `date` >> /tmp/smallfile_1client.ts.txt' 
   when: inventory_hostname == smallfile_1client_client
 
 - name: collect smallfile output 
