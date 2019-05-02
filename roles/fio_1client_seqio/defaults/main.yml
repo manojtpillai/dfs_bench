@@ -1,2 +1,20 @@
 ---
-# defaults file for fio_1client_seqio
+# defaults file for fio_1client_seqio---
+
+# where distributed fs is mounted on the client
+fio_1client_seqio_mntpt: /mnt/dfsmnt
+
+# number of fio jobs
+fio_1client_seqio_njobs: 2
+
+# size of file written/read by each job
+fio_1client_seqio_fsz_gb: 1
+
+# block size for write/read
+fio_1client_seqio_bs_kb: 128
+
+# fio_1client_seqio_resdir: dest for output, passed from calling playbook
+# fio_1client_seqio_client: client hostname, passed from calling playbook
+# fio_1client_seqio_servers: list of servers, passed from calling playbook
+
+...

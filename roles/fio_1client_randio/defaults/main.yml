@@ -1,5 +1,5 @@
 ---
-# vars file for fio_1client_randio
+# defaults file for fio_1client_randio
 
 # where distributed fs is mounted on the client
 fio_1client_randio_mntpt: /mnt/dfsmnt
