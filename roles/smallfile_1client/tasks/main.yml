@@ -50,7 +50,7 @@
   when: inventory_hostname == smallfile_1client_client
 
 - name: smallfile read
-  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --operation read > /tmp/smallfile_1client.read.out.txt'
+  shell: '{{ smallfile_bench }} --top {{ smallfile_1client_mntpt }}/created --threads {{ smallfile_1client_nthrds }} --files {{ smallfile_1client_nfiles }} --file-size {{ smallfile_1client_fsz_kb }} --record-size {{ smallfile_1client_recsz_kb }} --files-per-dir {{ smallfile_1client_dirsz }} --operation read > /tmp/smallfile_1client.read.out.txt'
   when: inventory_hostname == smallfile_1client_client
 
 - name: mark end of read test
@@ -98,7 +98,7 @@
   when: inventory_hostname in smallfile_1client_servers
 
 - name: small file find size
-  shell: 'echo "starting find-size test:" `date` >> /tmp/smallfile_1client.ts.txt; find {{ smallfile_1client_mntpt }}/created -size "{{ smallfile_1client_sizetofind }}K"; echo "find-size test done:" `date` >> /tmp/smallfile_1client.ts.txt' 
+  shell: 'echo "starting find-size test:" `date` >> /tmp/smallfile_1client.ts.txt; find {{ smallfile_1client_mntpt }}/created -size "{{ smallfile_1client_sizetofind }}k"; echo "find-size test done:" `date` >> /tmp/smallfile_1client.ts.txt' 
   when: inventory_hostname == smallfile_1client_client
 
 - name: drop client cache for rm
