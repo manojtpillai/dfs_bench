@@ -34,9 +34,13 @@ smallfile_1client_nametofind: "mtp.non_existent_name.non"
 # size to search for in find-size test
 smallfile_1client_sizetofind: "{{ smallfile_1client_fsz_kb|int * 2 }}"
 
+# dest directory for output
+smallfile_1client_resdir: '{{ run_dir }}'
 
-# fio_1client_randio_resdir: dest for output, passed from calling playbook
-# fio_1client_randio_client: client hostname, passed from calling playbook
-# fio_1client_randio_servers: list of servers, passed from calling playbook
+# client hostname
+smallfile_1client_client: '{{ groups.clients[0] }}'
+
+# list of servers
+smallfile_1client_servers: '{{ groups.servers }}'
 
 ...

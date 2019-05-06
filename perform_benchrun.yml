@@ -41,11 +41,7 @@
       collect_sysstat_mode: start
 
   - include_role:
-      name: smallfile_1client
-    vars: 
-      smallfile_1client_resdir: '{{ run_dir }}'
-      smallfile_1client_client: '{{ groups.clients[0] }}'
-      smallfile_1client_servers: '{{ groups.servers }}'
+      name: '{{ run_benchmark }}'
 
   - include_role:
       name: collect_sysstat

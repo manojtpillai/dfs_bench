@@ -22,8 +22,13 @@ fio_1client_randio_run_sec: 60
 # block size for seq write
 fio_1client_randio_sbs_kb: 128
 
-# fio_1client_randio_resdir: dest for output, passed from calling playbook
-# fio_1client_randio_client: client hostname, passed from calling playbook
-# fio_1client_randio_servers: list of servers, passed from calling playbook
+# dest directory for output
+fio_1client_randio_resdir: '{{ run_dir }}'
+
+# client hostname
+fio_1client_randio_client: '{{ groups.clients[0] }}'
+
+# list of servers
+fio_1client_randio_servers: '{{ groups.servers }}'
 
 ...
