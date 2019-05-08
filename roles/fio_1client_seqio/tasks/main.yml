@@ -35,13 +35,8 @@
   shell: 'echo -n "write test done: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
   when: inventory_hostname == fio_1client_seqio_client
 
-- name: drop client cache before fio sequential read 
-  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: drop server caches before fio sequential read 
-  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
-  when: inventory_hostname in fio_1client_seqio_servers
+- include_role:
+    name: drop_caches
 
 - name: mark start of read test
   shell: 'echo -n "starting read test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'

@@ -1,0 +1,24 @@
+---
+# tasks file for drop_caches
+
+- name: drop all client caches 
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in groups.clients
+
+- name: drop all server caches 
+  shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
+  when: inventory_hostname in groups.servers
+
+- name: check if run is marked as a ceph run
+  set_fact:
+    drop_ceph_caches: "{{ ceph_benchrun | default(false) }}"
+
+- name: drop ceph mds caches 
+  shell: 'ceph tell mds.* cache drop'
+  when: inventory_hostname == groups.servers[0] and drop_ceph_caches
+
+- name: drop ceph osd caches 
+  shell: 'ceph tell osd.* cache drop'
+  when: inventory_hostname == groups.servers[0] and drop_ceph_caches
+
+...
