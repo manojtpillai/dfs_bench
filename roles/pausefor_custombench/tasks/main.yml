@@ -1,0 +1,8 @@
+---
+# tasks file for pausefor_custombench
+
+- pause:
+    prompt: "run custom benchmark and ctrl-c c to continue"
+    seconds: "{{ pausefor_custombench_wait_secs }}"
+
+...
