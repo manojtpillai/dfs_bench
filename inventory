@@ -1,7 +1,49 @@
 
 [clients]
-dell-r730-003
+h31-740xd
 
 [servers]
-dell-r730-004
+h33-740xd
+h35-740xd
+h37-740xd
+
+[all:vars]
+
+# set ceph_benchrun=True if this is a ceph test
+# ceph_benchrun=True
+
+# benchmarks available; pick one
+run_benchmark="fio_1client_seqio"
+# run_benchmark="fio_1client_randio"
+# run_benchmark="smallfile_1client"
+# run_benchmark="pausefor_custombench"
+
+# 
+# benchmark-specific options
+# check in roles/<benchmark>/defaults/main.yml for more
+# 
+
+# fio_1client_seqio options
+fio_1client_seqio_njobs=4
+fio_1client_seqio_fsz_gb=16
+# fio_1client_seqio_njobs=8
+# fio_1client_seqio_fsz_gb=8
+
+# fio_1client_randio options
+fio_1client_randio_njobs=4
+fio_1client_randio_fsz_gb=16
+fio_1client_randio_iodepth=32
+# fio_1client_randio_iodepth=64
+# fio_1client_randio_njobs=8
+# fio_1client_randio_fsz_gb=8
+
+# smallfile_1client options
+smallfile_1client_nthrds=4
+smallfile_1client_nfiles=262144
+# smallfile_1client_nthrds=16
+# smallfile_1client_nfiles=65536
+# smallfile_1client_dirsz=40000
+
+# pausefor_custombench options
+pausefor_custombench_wait_secs=600
 

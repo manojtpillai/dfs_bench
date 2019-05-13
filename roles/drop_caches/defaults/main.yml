@@ -1,2 +1,8 @@
 ---
 # defaults file for drop_caches
+
+drop_caches_client: True
+drop_caches_server: True
+drop_caches_ceph: False
+
+...

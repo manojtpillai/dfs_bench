@@ -8,6 +8,7 @@
   loop:
     - iostat
     - sar
+    - top
     - pidstat
     - vmstat
 
@@ -19,7 +20,12 @@
   shell: "nohup sar -n DEV -BdrquW -p {{ collect_sysstat_interval }} > /tmp/collect_sysstat.sar.txt 2>&1 < /dev/null &"
   when: collect_sysstat_mode == "start"
 
+# top not runniing consistently with nohup
 - name: start collect_sysstat top
+  shell: 'top -bH -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top.txt &'
+  when: collect_sysstat_mode == "start"
+
+- name: start collect_sysstat pidstat
   shell: "nohup pidstat -t {{ collect_sysstat_interval }} > /tmp/collect_sysstat.pidstat.txt 2>&1 < /dev/null &"
   when: collect_sysstat_mode == "start"
 
@@ -34,6 +40,7 @@
   loop:
     - iostat
     - sar
+    - top
     - pidstat
     - vmstat
   when: collect_sysstat_mode == "gather"

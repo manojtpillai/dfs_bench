@@ -1,24 +1,35 @@
 ---
 # tasks file for drop_caches
 
+- name: check if client caches to be dropped
+  set_fact:
+    drop_caches_client: False
+  when: drop_caches_mode is defined and drop_caches_mode == "none"
+
+- name: check if server caches to be dropped
+  set_fact:
+    drop_caches_server: False
+  when: drop_caches_mode is defined and ( drop_caches_mode == "client" or drop_caches_mode == "none" )
+
 - name: drop all client caches 
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
-  when: inventory_hostname in groups.clients
+  when: inventory_hostname in groups.clients and drop_caches_client
 
 - name: drop all server caches 
   shell: 'sync ; echo 3 > /proc/sys/vm/drop_caches'
-  when: inventory_hostname in groups.servers
+  when: inventory_hostname in groups.servers and drop_caches_server
 
-- name: check if run is marked as a ceph run
+- name: check if ceph caches to be dropped
   set_fact:
-    drop_ceph_caches: "{{ ceph_benchrun | default(false) }}"
+    drop_caches_ceph: True
+  when: ceph_benchrun is defined and ceph_benchrun and drop_caches_server
 
 - name: drop ceph mds caches 
-  shell: 'ceph tell mds.* cache drop'
-  when: inventory_hostname == groups.servers[0] and drop_ceph_caches
+  shell: 'ceph tell mds.\* cache drop'
+  when: inventory_hostname == groups.servers[0] and drop_caches_ceph
 
 - name: drop ceph osd caches 
-  shell: 'ceph tell osd.* cache drop'
-  when: inventory_hostname == groups.servers[0] and drop_ceph_caches
+  shell: 'ceph tell osd.\* cache drop'
+  when: inventory_hostname == groups.servers[0] and drop_caches_ceph
 
 ...
