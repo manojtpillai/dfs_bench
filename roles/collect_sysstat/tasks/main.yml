@@ -20,9 +20,13 @@
   shell: "nohup sar -n DEV -BdrquW -p {{ collect_sysstat_interval }} > /tmp/collect_sysstat.sar.txt 2>&1 < /dev/null &"
   when: collect_sysstat_mode == "start"
 
-# top not runniing consistently with nohup
+# top not running consistently with nohup
 - name: start collect_sysstat top
-  shell: 'top -bH -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top.txt &'
+  shell: 'top -bH -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top_thr.txt &'
+  when: collect_sysstat_mode == "start"
+
+- name: start collect_sysstat top_proc
+  shell: 'top -b -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top_proc.txt &'
   when: collect_sysstat_mode == "start"
 
 - name: start collect_sysstat pidstat
@@ -40,7 +44,8 @@
   loop:
     - iostat
     - sar
-    - top
+    - top_thr
+    - top_proc
     - pidstat
     - vmstat
   when: collect_sysstat_mode == "gather"
