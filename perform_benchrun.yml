@@ -10,6 +10,7 @@
 
   tasks:
   - name: get current directory
+    run_once: true
     local_action:
       module: command
       args: pwd
@@ -20,6 +21,7 @@
       run_pdir: "{{ run_basedir | default(run_cwd.stdout) }}"
 
   - name: generate run timestamp
+    run_once: true
     local_action:
       module: shell
       args: 'date +%F_%s'
@@ -30,6 +32,7 @@
       run_dir: '{{ run_pdir }}/run_{{ run_ts.stdout }}'
 
   - name: create run directory
+    run_once: true
     local_action:
       module: file
       path: '{{ run_dir }}'

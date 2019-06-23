@@ -9,6 +9,10 @@ h37-740xd
 
 [all:vars]
 
+# by default, run output is in a sub-dir in playbook directory
+# use run_basedir to change that
+# run_basedir="/home/mpillai"
+
 # set ceph_benchrun=True if this is a ceph test
 # ceph_benchrun=True
 
