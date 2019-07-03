@@ -28,10 +28,10 @@ run_benchmark="fio_1client_seqio"
 # 
 
 # fio_1client_seqio options
-fio_1client_seqio_njobs=4
-fio_1client_seqio_fsz_gb=16
-# fio_1client_seqio_njobs=8
-# fio_1client_seqio_fsz_gb=8
+fio_1client_seqio_njobs=32
+fio_1client_seqio_fsz_gb=2
+# fio_1client_seqio_njobs=4
+# fio_1client_seqio_fsz_gb=16
 
 # fio_1client_randio options
 fio_1client_randio_njobs=4

@@ -1,0 +1,25 @@
+
+
+---
+# quickly test a particular benchmark (role)
+
+- hosts: all
+
+  tasks:
+
+  - name: set run directory
+    set_fact:
+      run_dir: /tmp/run_ts
+
+  - name: create run directory
+    local_action:
+      module: file
+      path: '{{ run_dir }}'
+      state: directory
+
+  - include_role:
+      name: get_sysinfo
+    vars:
+      get_sysinfo_dir: '{{ run_dir }}'
+
+...

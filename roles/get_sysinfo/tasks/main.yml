@@ -3,11 +3,18 @@
 
 - name: capture system info
   block:
-    shell: cat /proc/cpuinfo > /tmp/get_sysinfo.cpuinfo.txt
-    shell: cat /proc/meminfo > /tmp/get_sysinfo.meminfo.txt
-    shell: lsblk > /tmp/get_sysinfo.lsblk.txt
-    shell: df -h > /tmp/get_sysinfo.df_h.txt
-    shell: rpm -qa > /tmp/get_sysinfo.rpm_qa.txt
+  - name: get_sysinfo cpuinfo
+    shell: "cat /proc/cpuinfo > /tmp/get_sysinfo.cpuinfo.txt"
+  - name: get_sysinfo meminfo
+    shell: "cat /proc/meminfo > /tmp/get_sysinfo.meminfo.txt"
+  - name: get_sysinfo lsblk
+    shell: "lsblk > /tmp/get_sysinfo.lsblk.txt"
+  - name: get_sysinfo df
+    shell: "df -h > /tmp/get_sysinfo.df_h.txt"
+  - name: get_sysinfo rpm list
+    shell: "rpm -qa > /tmp/get_sysinfo.rpm_qa.txt"
+    args:
+      warn: no
   
 - name: collect sys info
   fetch:
