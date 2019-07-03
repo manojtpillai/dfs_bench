@@ -1,17 +1,13 @@
 ---
 # tasks file for get_sysinfo
 
-- name: capture cpu info
-  shell: cat /proc/cpuinfo > /tmp/get_sysinfo.cpuinfo.txt
-
-- name: capture memory info
-  shell: cat /proc/meminfo > /tmp/get_sysinfo.meminfo.txt
-
-- name: capture block info
-  shell: lsblk > /tmp/get_sysinfo.lsblk.txt
-
-- name: capture df info
-  shell: df -h > /tmp/get_sysinfo.df_h.txt
+- name: capture system info
+  block:
+    shell: cat /proc/cpuinfo > /tmp/get_sysinfo.cpuinfo.txt
+    shell: cat /proc/meminfo > /tmp/get_sysinfo.meminfo.txt
+    shell: lsblk > /tmp/get_sysinfo.lsblk.txt
+    shell: df -h > /tmp/get_sysinfo.df_h.txt
+    shell: rpm -qa > /tmp/get_sysinfo.rpm_qa.txt
   
 - name: collect sys info
   fetch:
@@ -22,4 +18,5 @@
     - meminfo
     - lsblk
     - df_h
+    - rpm_qa
 ...
