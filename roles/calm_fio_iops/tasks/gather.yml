@@ -1,0 +1,16 @@
+---
+# tasks file for calm_fio_iops
+
+- name: collect calm_fio_iops output files
+  fetch:
+    src: "/tmp/calm_fio_iops.{{ item }}"
+    dest: '{{ calm_fio_iops_resdir }}'
+  loop:
+    - write.out.txt
+    - randrw.out.txt
+    - ts.txt
+    - write.job
+    - randrw.job
+  when: inventory_hostname in calm_fio_iops_clients
+
+...

@@ -1,0 +1,16 @@
+---
+# tasks file for calm_fio_iops
+
+- include_tasks: prepare.yml
+  when: calm_fio_iops_mode == "prepare"
+
+- include_tasks: run.yml
+  when: calm_fio_iops_mode == "run"
+
+- include_tasks: stop.yml
+  when: calm_fio_iops_mode == "stop"
+
+- include_tasks: gather.yml
+  when: calm_fio_iops_mode == "gather"
+
+...

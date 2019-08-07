@@ -1,0 +1,12 @@
+---
+# tasks file for calm_fio_iops stop 
+
+- name: stop calm_fio_iops fio instance
+  shell: 'pkill -x fio'
+  when: inventory_hostname in calm_fio_iops_clients
+
+- name: mark end of calm job
+  shell: 'echo -n "iops load stopped: " >> /tmp/calm_fio_iops.ts.txt; date >> /tmp/calm_fio_iops.ts.txt' 
+  when: inventory_hostname in calm_fio_iops_clients
+
+...

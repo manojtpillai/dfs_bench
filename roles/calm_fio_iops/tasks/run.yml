@@ -1,0 +1,34 @@
+---
+# tasks file for calm_fio_iops
+
+- name: mark start of calm iops load
+  shell: 'echo -n "starting iops load: " >> /tmp/calm_fio_iops.ts.txt; date >> /tmp/calm_fio_iops.ts.txt'
+  when: inventory_hostname in calm_fio_iops_clients
+
+- name: create calm fio job
+  blockinfile:
+    path: /tmp/calm_fio_iops.randrw.job
+    create: yes
+    block: |
+      [randrw]
+      rw=randrw
+      ioengine=libaio
+      direct=1
+      norandommap
+      rate_iops={{ calm_fio_iops_rate }}
+      rwmixread={{ calm_fio_iops_read_pct }}
+      bs={{ calm_fio_iops_bs }}
+      directory={{ calm_fio_iops_dir }}
+      filename_format=f.$jobnum.$filenum
+      numjobs={{ calm_fio_iops_njobs }}
+      iodepth={{ calm_fio_iops_iodepth }}
+      filesize={{ calm_fio_iops_fsz_gb }}g
+      time_based=1
+      runtime={{ fio_1client_randio_run_sec }}
+  when: inventory_hostname in calm_fio_iops_clients
+
+- name: execute calm job
+  shell: 'nohup fio /tmp/calm_fio_iops.randrw.job --output=/tmp/calm_fio_iops.randrw.out.txt --status-interval=60 > /dev/null 2>&1 < /dev/null &'
+  when: inventory_hostname in calm_fio_iops_clients
+
+...

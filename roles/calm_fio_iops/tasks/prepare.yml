@@ -1,0 +1,37 @@
+---
+# tasks file for calm_fio_iops prepare
+
+- name: setup timestamps for calm_fio_iops
+  shell: 'echo "calm_fio_iops timestamps: " > /tmp/calm_fio_iops.ts.txt'
+  when: inventory_hostname in calm_fio_iops_clients
+
+- name: mark start of calm seq write test
+  shell: 'echo -n "starting seq write test: " >> /tmp/calm_fio_iops.ts.txt; date >> /tmp/calm_fio_iops.ts.txt'
+  when: inventory_hostname in calm_fio_iops_clients 
+
+- name: create calm seq write job
+  blockinfile:
+    path: /tmp/calm_fio_iops.write.job
+    create: yes
+    block: |
+      [initialwrite]
+      ioengine=sync
+      rw=write
+      create_on_open=1
+      end_fsync=1
+      bs={{ calm_fio_iops_sbs_kb }}k
+      directory={{ calm_fio_iops_dir }}
+      filename_format=f.$jobnum.$filenum
+      numjobs={{ calm_fio_iops_njobs }}
+      filesize={{ calm_fio_iops_fsz_gb }}g
+  when: inventory_hostname in calm_fio_iops_clients
+
+- name: execute calm seq write
+  shell: 'fio /tmp/calm_fio_iops.write.job --output=/tmp/calm_fio_iops.write.out.txt'
+  when: inventory_hostname in calm_fio_iops_clients
+
+- name: mark end of calm seq write 
+  shell: 'echo -n "write test done: " >> /tmp/calm_fio_iops.ts.txt; date >> /tmp/calm_fio_iops.ts.txt'
+  when: inventory_hostname in calm_fio_iops_clients
+
+...
