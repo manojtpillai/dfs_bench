@@ -1,6 +1,11 @@
 ---
 # tasks file for calm_fio_iops prepare
 
+- name: create directory for calm dataset
+  file:
+    path: '{{ calm_fio_iops_dir }}'
+    state: directory
+
 - name: setup timestamps for calm_fio_iops
   shell: 'echo "calm_fio_iops timestamps: " > /tmp/calm_fio_iops.ts.txt'
   when: inventory_hostname in calm_fio_iops_clients
@@ -21,7 +26,7 @@
       end_fsync=1
       bs={{ calm_fio_iops_sbs_kb }}k
       directory={{ calm_fio_iops_dir }}
-      filename_format=f.$jobnum.$filenum
+      filename_format=calmf.$jobnum.$filenum
       numjobs={{ calm_fio_iops_njobs }}
       filesize={{ calm_fio_iops_fsz_gb }}g
   when: inventory_hostname in calm_fio_iops_clients

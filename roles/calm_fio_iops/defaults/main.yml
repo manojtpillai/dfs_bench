@@ -2,14 +2,14 @@
 # defaults file 
 
 # directory for data set
-calm_fio_iops_dir: /mnt/dfsmnt
+calm_fio_iops_dir: /mnt/dfsmnt/CALM
 
 # number of fio jobs
-calm_fio_iops_njobs: 2
+calm_fio_iops_njobs: 1
 
 # iops rate for each job
 # use fio syntax for rate_iops=
-calm_fio_iops_rate: 64
+calm_fio_iops_rate: 128
 
 # size of file written/read by each job
 calm_fio_iops_fsz_gb: 1
@@ -19,7 +19,10 @@ calm_fio_iops_fsz_gb: 1
 calm_fio_iops_bs: 8k
 
 # iodepth per fio job 
-calm_fio_iops_iodepth: 16
+calm_fio_iops_iodepth: 32
+
+# iodepth per fio job 
+calm_fio_iops_read_pct: 50
 
 # block size for seq write
 calm_fio_iops_sbs_kb: 128
@@ -31,6 +34,6 @@ calm_fio_iops_run_sec: 7200
 calm_fio_iops_resdir: '{{ run_dir }}'
 
 # clients
-calm_fio_iops_clients: '{{ groups.clients }}'
+calm_fio_iops_clients: '{{ groups.calmclients }}'
 
 ...

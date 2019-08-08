@@ -9,4 +9,8 @@
   shell: 'echo -n "iops load stopped: " >> /tmp/calm_fio_iops.ts.txt; date >> /tmp/calm_fio_iops.ts.txt' 
   when: inventory_hostname in calm_fio_iops_clients
 
+- name: capture calm data set dir listing
+  shell: "ls -l {{ calm_fio_iops_dir }} > /tmp/calm_fio_iops.dir_ls.txt"
+  when: inventory_hostname in calm_fio_iops_clients
+
 ...

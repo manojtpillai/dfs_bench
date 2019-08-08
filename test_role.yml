@@ -18,8 +18,27 @@
       state: directory
 
   - include_role:
-      name: get_sysinfo
+      name: calm_fio_iops
     vars:
-      get_sysinfo_dir: '{{ run_dir }}'
+      calm_fio_iops_mode: prepare
+
+  - include_role:
+      name: calm_fio_iops
+    vars:
+      calm_fio_iops_mode: run
+
+  - pause:
+      seconds: 300
+
+  - include_role:
+      name: calm_fio_iops
+    vars:
+      calm_fio_iops_mode: stop
+
+  - include_role:
+      name: calm_fio_iops
+    vars:
+      calm_fio_iops_mode: gather
+      calm_fio_iops_resdir: '{{ run_dir }}'
 
 ...

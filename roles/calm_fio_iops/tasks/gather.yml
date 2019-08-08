@@ -6,11 +6,12 @@
     src: "/tmp/calm_fio_iops.{{ item }}"
     dest: '{{ calm_fio_iops_resdir }}'
   loop:
+    - write.job
+    - randrw.job
     - write.out.txt
     - randrw.out.txt
     - ts.txt
-    - write.job
-    - randrw.job
+    - dir_ls.txt
   when: inventory_hostname in calm_fio_iops_clients
 
 ...

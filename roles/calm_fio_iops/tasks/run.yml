@@ -19,12 +19,12 @@
       rwmixread={{ calm_fio_iops_read_pct }}
       bs={{ calm_fio_iops_bs }}
       directory={{ calm_fio_iops_dir }}
-      filename_format=f.$jobnum.$filenum
+      filename_format=calmf.$jobnum.$filenum
       numjobs={{ calm_fio_iops_njobs }}
       iodepth={{ calm_fio_iops_iodepth }}
       filesize={{ calm_fio_iops_fsz_gb }}g
       time_based=1
-      runtime={{ fio_1client_randio_run_sec }}
+      runtime={{ calm_fio_iops_run_sec }}
   when: inventory_hostname in calm_fio_iops_clients
 
 - name: execute calm job
