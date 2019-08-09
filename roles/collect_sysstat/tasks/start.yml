@@ -1,0 +1,19 @@
+---
+# tasks file for collect_sysstat start
+
+- name: start collect_sysstat commands
+  block:
+  - name: start collect_sysstat iostat
+    shell: "nohup iostat -N -tkdx {{ collect_sysstat_interval }} > /tmp/collect_sysstat.iostat.txt 2>&1 < /dev/null &"
+  - name: start collect_sysstat sar
+    shell: "nohup sar -n DEV -BdrquW -p {{ collect_sysstat_interval }} > /tmp/collect_sysstat.sar.txt 2>&1 < /dev/null &"
+  - name: start collect_sysstat top
+    shell: "nohup top -bH -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top_thr.txt  2>&1 < /dev/null &"
+  - name: start collect_sysstat top_proc
+    shell: "nohup top -b -d {{ collect_sysstat_interval }} > /tmp/collect_sysstat.top_proc.txt 2>&1 < /dev/null &"
+  - name: start collect_sysstat pidstat
+    shell: "nohup pidstat -t {{ collect_sysstat_interval }} > /tmp/collect_sysstat.pidstat.txt 2>&1 < /dev/null &"
+  - name: start collect_sysstat vmstat
+    shell: "nohup vmstat -t {{ collect_sysstat_interval }} > /tmp/collect_sysstat.vmstat.txt 2>&1 < /dev/null &"
+
+...

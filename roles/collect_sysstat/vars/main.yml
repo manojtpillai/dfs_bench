@@ -1,10 +1,4 @@
 ---
 # vars file for collect_sysstat
 
-# default monitoring interval
-collect_sysstat_interval: 10
-
-# collect_sysstat_dir: dest for output, passed from calling playbook
-# collect_sysstat_mode: start or gather, passed from calling playbook
-
 ...

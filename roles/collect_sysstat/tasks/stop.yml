@@ -1,0 +1,14 @@
+---
+# tasks file for collect_sysstat stop
+
+- name: stop active collect_sysstat commands
+  shell: "pkill -x {{ item }}"
+  register: pkill_result
+  failed_when: pkill_result.rc > 1
+  loop:
+    - iostat
+    - sar
+    - top
+    - pidstat
+    - vmstat
+...

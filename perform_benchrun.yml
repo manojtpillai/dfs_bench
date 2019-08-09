@@ -39,12 +39,30 @@
       state: directory
 
   - include_role:
+      name: calm_fio_iops
+    vars: 
+      calm_fio_iops_mode: prepare
+    when: calm_enabled is defined and calm_enabled
+
+  - include_role:
       name: collect_sysstat
     vars: 
       collect_sysstat_mode: start
 
   - include_role:
+      name: calm_fio_iops
+    vars: 
+      calm_fio_iops_mode: run
+    when: calm_enabled is defined and calm_enabled
+
+  - include_role:
       name: '{{ run_benchmark }}'
+
+  - include_role:
+      name: calm_fio_iops
+    vars: 
+      calm_fio_iops_mode: stop
+    when: calm_enabled is defined and calm_enabled
 
   - include_role:
       name: collect_sysstat
@@ -56,6 +74,13 @@
     vars: 
       collect_sysstat_mode: gather
       collect_sysstat_dir: '{{ run_dir }}'
+
+  - include_role:
+      name: calm_fio_iops
+    vars: 
+      calm_fio_iops_mode: gather
+      calm_fio_iops_dir: '{{ run_dir }}'
+    when: calm_enabled is defined and calm_enabled
 
   - include_role:
       name: get_sysinfo

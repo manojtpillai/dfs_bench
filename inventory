@@ -7,11 +7,18 @@ h33-740xd
 h35-740xd
 h37-740xd
 
+[calmclients]
+h31-740xd
+
 [all:vars]
 
 # by default, run output is in a sub-dir in playbook directory
 # use run_basedir to change that
 # run_basedir="/home/mpillai"
+
+# set calm_enabled=True to inject a steady background load
+# also consider changing calm_fio_iops parameters appropriately
+# calm_enabled=True
 
 # set ceph_benchrun=True if this is a ceph test
 # ceph_benchrun=True
@@ -21,6 +28,11 @@ run_benchmark="fio_1client_seqio"
 # run_benchmark="fio_1client_randio"
 # run_benchmark="smallfile_1client"
 # run_benchmark="pausefor_custombench"
+
+# calm options
+calm_fio_iops_rate=2048
+calm_fio_iops_fsz_gb=16
+calm_fio_iops_njobs=1
 
 # 
 # benchmark-specific options

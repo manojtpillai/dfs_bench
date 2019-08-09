@@ -1,0 +1,16 @@
+---
+# tasks file for collect_sysstat gather
+
+- name: fetch collect_sysstat output
+  fetch:
+    src: "/tmp/collect_sysstat.{{ item }}.txt"
+    dest: '{{ collect_sysstat_dir }}'
+  loop:
+    - iostat
+    - sar
+    - top_thr
+    - top_proc
+    - pidstat
+    - vmstat
+
+...
