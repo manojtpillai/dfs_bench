@@ -1,0 +1,6 @@
+---
+
+- name: setup timestamps for tests in fio_1client_seqio
+  shell: 'echo "fio_1client_seqio timestamps: " > /tmp/fio_1client_seqio.ts.txt'
+  when: inventory_hostname == fio_1client_seqio_client
+...

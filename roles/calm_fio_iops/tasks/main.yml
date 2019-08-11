@@ -1,5 +1,4 @@
 ---
-# tasks file for calm_fio_iops
 
 - include_tasks: prepare.yml
   when: calm_fio_iops_mode == "prepare"

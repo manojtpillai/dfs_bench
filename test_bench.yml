@@ -18,5 +18,8 @@
       state: directory
 
   - include_role:
-      name: '{{ run_benchmark }}'
+      name: '{{ benchmark_name }}'
+    vars:
+      benchmark_mode: run
+
 ...

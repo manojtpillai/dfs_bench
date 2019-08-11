@@ -2,9 +2,9 @@
 ---
 - hosts: all
 
-  # stores all output for each run in a created directory
-  # by default, this dir is created in current dir
-  # to change that, provide 
+  # Stores all output for each run in a created directory.
+  # By default, this dir is created in current dir.
+  # To change that, provide:
   # vars: 
   #   - run_basedir: /tmp (or whatever)
 
@@ -45,6 +45,11 @@
     when: calm_enabled is defined and calm_enabled
 
   - include_role:
+      name: '{{ benchmark_name }}'
+    vars: 
+      benchmark_mode: prepare
+
+  - include_role:
       name: collect_sysstat
     vars: 
       collect_sysstat_mode: start
@@ -56,7 +61,9 @@
     when: calm_enabled is defined and calm_enabled
 
   - include_role:
-      name: '{{ run_benchmark }}'
+      name: '{{ benchmark_name }}'
+    vars: 
+      benchmark_mode: run
 
   - include_role:
       name: calm_fio_iops

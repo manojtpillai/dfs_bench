@@ -1,0 +1,13 @@
+---
+
+- name: setup directory structure for smallfile tests
+  file:
+    path: '{{ smallfile_1client_mntpt }}/{{ item }}'
+    state: directory
+  loop:
+    - created
+    - tarred
+    - untarred
+  when: inventory_hostname == smallfile_1client_client
+
+...

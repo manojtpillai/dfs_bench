@@ -1,7 +1,7 @@
 
 
 ---
-# quickly test a particular benchmark (role)
+# quickly test a particular role
 
 - hosts: all
 

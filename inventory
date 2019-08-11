@@ -24,10 +24,10 @@ h31-740xd
 # ceph_benchrun=True
 
 # benchmarks available; pick one
-run_benchmark="fio_1client_seqio"
-# run_benchmark="fio_1client_randio"
-# run_benchmark="smallfile_1client"
-# run_benchmark="pausefor_custombench"
+benchmark_name="fio_1client_seqio"
+# benchmark_name="fio_1client_randio"
+# benchmark_name="smallfile_1client"
+# benchmark_name="pausefor_custombench"
 
 # calm options
 calm_fio_iops_rate=2048

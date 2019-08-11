@@ -1,0 +1,86 @@
+---
+# tasks file for fio_1client_randio
+
+- name: mark start of random read test
+  shell: 'echo -n "starting random read test: " >> /tmp/fio_1client_randio.ts.txt; date >> /tmp/fio_1client_randio.ts.txt'
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: create fio random read job
+  blockinfile:
+    path: /tmp/fio_1client_randio.rread.job
+    create: yes
+    block: |
+      [randomread]
+      rw=randread
+      ioengine=libaio
+      iodepth={{ fio_1client_randio_iodepth }}
+      direct=1
+      bs={{ fio_1client_randio_bs_kb }}k
+      directory={{ fio_1client_randio_mntpt }}
+      filename_format=f.$jobnum.$filenum
+      numjobs={{ fio_1client_randio_njobs }}
+      filesize={{ fio_1client_randio_fsz_gb }}g
+      size={{ fio_1client_randio_fsz_gb }}g
+      time_based=1
+      runtime={{ fio_1client_randio_run_sec }}
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: fio random read
+  shell: 'fio /tmp/fio_1client_randio.rread.job --output=/tmp/fio_1client_randio.rread.out.txt'
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: mark end of random read test
+  shell: 'echo -n "random read test done: " >> /tmp/fio_1client_randio.ts.txt; date >> /tmp/fio_1client_randio.ts.txt'
+  when: inventory_hostname == fio_1client_randio_client
+
+- include_role: 
+    name: drop_caches
+
+- name: mark start of random write test
+  shell: 'echo -n "starting random write test: " >> /tmp/fio_1client_randio.ts.txt; date >> /tmp/fio_1client_randio.ts.txt'
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: create fio random write job
+  blockinfile:
+    path: /tmp/fio_1client_randio.rwrite.job
+    create: yes
+    block: |
+      [randomwrite]
+      rw=randwrite
+      ioengine=libaio
+      iodepth={{ fio_1client_randio_iodepth }}
+      direct=1
+      end_fsync=1
+      bs={{ fio_1client_randio_bs_kb }}k
+      directory={{ fio_1client_randio_mntpt }}
+      filename_format=f.$jobnum.$filenum
+      numjobs={{ fio_1client_randio_njobs }}
+      filesize={{ fio_1client_randio_fsz_gb }}g
+      size={{ fio_1client_randio_fsz_gb }}g
+      time_based=1
+      runtime={{ fio_1client_randio_run_sec }}
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: fio random write
+  shell: 'fio /tmp/fio_1client_randio.rwrite.job --output=/tmp/fio_1client_randio.rwrite.out.txt'
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: mark end of random write test
+  shell: 'echo -n "random write test done: " >> /tmp/fio_1client_randio.ts.txt; date >> /tmp/fio_1client_randio.ts.txt'
+  when: inventory_hostname == fio_1client_randio_client
+
+- name: collect fio output 
+  fetch:
+    src: "/tmp/fio_1client_randio.{{ item }}"
+    dest: '{{ fio_1client_randio_resdir }}'
+  loop:
+    - write.out.txt
+    - rread.out.txt
+    - rwrite.out.txt
+    - ts.txt
+    - write.job
+    - rread.job
+    - rwrite.job
+  when: inventory_hostname == fio_1client_randio_client
+
+...

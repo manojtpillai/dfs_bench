@@ -1,80 +1,9 @@
 ---
-# tasks file for fio_1client_seqio
 
-- name: setup timestamps for tests in fio_1client_seqio
-  shell: 'echo "fio_1client_seqio timestamps: " > /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == fio_1client_seqio_client
+- include_tasks: prepare.yml
+  when: benchmark_mode == "prepare"
 
-- name: mark start of write test
-  shell: 'echo -n "starting write test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == fio_1client_seqio_client
+- include_tasks: run.yml
+  when: benchmark_mode == "run"
 
-- name: create fio sequential write job
-  blockinfile:
-    path: /tmp/fio_1client_seqio.write.job
-    create: yes
-    block: |
-      [writetest]
-      ioengine=sync
-      rw=write
-      create_on_open=1
-      end_fsync=1
-      bs={{ fio_1client_seqio_bs_kb }}k
-      directory={{ fio_1client_seqio_mntpt }}
-      filename_format=f.$jobnum.$filenum
-      numjobs={{ fio_1client_seqio_njobs }}
-      filesize={{ fio_1client_seqio_fsz_gb }}g
-      size={{ fio_1client_seqio_fsz_gb }}g
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: fio sequential write
-  shell: 'fio /tmp/fio_1client_seqio.write.job --output=/tmp/fio_1client_seqio.write.out.txt'
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: mark end of write test
-  shell: 'echo -n "write test done: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == fio_1client_seqio_client
-
-- include_role:
-    name: drop_caches
-
-- name: mark start of read test
-  shell: 'echo -n "starting read test: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: create fio sequential read job
-  blockinfile:
-    path: /tmp/fio_1client_seqio.read.job
-    create: yes
-    block: |
-      [readtest]
-      ioengine=sync
-      rw=read
-      bs={{ fio_1client_seqio_bs_kb }}k
-      directory={{ fio_1client_seqio_mntpt }}
-      filename_format=f.$jobnum.$filenum
-      numjobs={{ fio_1client_seqio_njobs }}
-      filesize={{ fio_1client_seqio_fsz_gb }}g
-      size={{ fio_1client_seqio_fsz_gb }}g
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: fio sequential read
-  shell: 'fio /tmp/fio_1client_seqio.read.job --output=/tmp/fio_1client_seqio.read.out.txt'
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: mark end of read test
-  shell: 'echo -n "read test done: " >> /tmp/fio_1client_seqio.ts.txt; date >> /tmp/fio_1client_seqio.ts.txt'
-  when: inventory_hostname == fio_1client_seqio_client
-
-- name: collect fio output 
-  fetch:
-    src: "/tmp/fio_1client_seqio.{{ item }}"
-    dest: '{{ fio_1client_seqio_resdir }}'
-  loop:
-    - write.out.txt
-    - read.out.txt
-    - ts.txt
-    - write.job
-    - read.job
-  when: inventory_hostname == fio_1client_seqio_client
-
+...
