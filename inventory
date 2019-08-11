@@ -17,10 +17,11 @@ h31-740xd
 # run_basedir="/home/mpillai"
 
 # set calm_enabled=True to inject a steady background load
-# also consider changing calm_fio_iops parameters appropriately
+# change calm_fio_iops parameters to control load
 # calm_enabled=True
 
 # set ceph_benchrun=True if this is a ceph test
+# cuurently, dropping ceph caches is based on this
 # ceph_benchrun=True
 
 # benchmarks available; pick one

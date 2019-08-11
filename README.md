@@ -1,5 +1,5 @@
 # dimir
-Performance benchmarking for distributed storage.
+Dimir (pronounced demur, and a portmanteau of Distributed and Mimir) is a tool for benchmarking distributed storage.
 
 This project is in its early days. The aim is to create simple ansible playbooks to help with performance analysis of distributed storage solutions, like ceph and gluster.
 
@@ -7,7 +7,7 @@ This project is in its early days. The aim is to create simple ansible playbooks
 
 There are two types of ansible roles at this time:
 
-1. A single performance benchmark. An example is fio_1client_seqio, which does an fio sequential write and read test.
+1. A single performance benchmark. An example is fio_1client_seqio, which does an fio sequential write and read test. A benchmark role is written to have 2 modes, prepare and run.
 
 1. A helper role. An example is collect_sysstat, which is used to get output of monitoring utilities for the duration of the benchmark run, and is useful in analyzing results from the benchmark.
 
