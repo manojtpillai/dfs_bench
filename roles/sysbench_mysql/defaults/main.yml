@@ -1,0 +1,44 @@
+---
+# defaults are aimed at test environments
+# more reasonable values can be provided though inventory
+
+# data dir for mysql
+sysbench_mysql_datadir: /mnt/dfsmnt/mysql_pvt
+
+# buffer pool size for mysql
+sysbench_mysql_pool_bytes: 4294967296
+
+# mysql user
+sysbench_mysql_user: root
+
+# mysql user password
+sysbench_mysql_pass: wontwork
+
+# sysbench test name
+sysbench_mysql_test: /usr/share/sysbench/oltp_read_write.lua
+
+# DB name
+sysbench_mysql_dbname: sysbtest
+
+# number of sysbench threads
+sysbench_mysql_nthrds: 64
+
+# number of tables
+sysbench_mysql_ntbls: 32
+
+# table size
+sysbench_mysql_tblsize: 20000
+
+# runtime for sysbench
+sysbench_mysql_runtime: 180
+
+# interval for sysbench reporting 
+sysbench_mysql_outintrvl: 60
+
+# dest directory for output
+sysbench_mysql_resdir: '{{ run_dir }}'
+
+# client hostname
+sysbench_mysql_client: '{{ groups.clients[0] }}'
+
+...

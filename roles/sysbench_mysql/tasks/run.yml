@@ -1,0 +1,34 @@
+---
+
+- name: sysbench_mysql set buffer pool size
+  shell: 'mysql --user={{ sysbench_mysql_user }} --password={{ sysbench_mysql_pass }} -e "SET GLOBAL innodb_buffer_pool_size={{ sysbench_mysql_pool_bytes }};"' 
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: mark start of sysbench_mysql run
+  shell: 'echo -n "starting sysbench_mysql run: " >> /tmp/sysbench_mysql.ts.txt; date >> /tmp/sysbench_mysql.ts.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: sysbench_mysql run
+  shell: 'sysbench {{ sysbench_mysql_test }} --db-driver=mysql --mysql-user={{ sysbench_mysql_user }} --mysql-password={{ sysbench_mysql_pass }} --mysql-db={{ sysbench_mysql_dbname }} --db-ps-mode=disable --threads={{ sysbench_mysql_nthrds }} --tables={{ sysbench_mysql_ntbls }} --table-size={{ sysbench_mysql_tblsize }} --time={{ sysbench_mysql_runtime }} --report-interval={{ sysbench_mysql_outintrvl }} run > /tmp/sysbench_mysql.run.out.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: mark end of sysbench_mysql run
+  shell: 'echo -n "sysbench_mysql run done: " >> /tmp/sysbench_mysql.ts.txt; date >> /tmp/sysbench_mysql.ts.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: sysbench_mysql get settings
+  shell: 'mysql --user={{ sysbench_mysql_user }} --password={{ sysbench_mysql_pass }} -e "SHOW GLOBAL VARIABLES;" > /tmp/sysbench_mysql.settings.txt' 
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: collect sysbench_mysql get output
+  fetch: 
+    src: "/tmp/sysbench_mysql.{{ item }}"
+    dest: '{{ sysbench_mysql_resdir }}'
+  loop: 
+    - prepare.out.txt
+    - run.out.txt
+    - ts.txt
+    - settings.txt
+  when: inventory_hostname == sysbench_mysql_client
+
+...

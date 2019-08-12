@@ -1,0 +1,23 @@
+---
+
+- name: setup timestamps for sysbench_mysql 
+  shell: 'echo -n "sysbench_mysql timestamps: " > /tmp/sysbench_mysql.ts.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: mark start of sysbench_mysql prepare
+  shell: 'echo -n "starting sysbench_mysql prepare: " >> /tmp/sysbench_mysql.ts.txt; date >> /tmp/sysbench_mysql.ts.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: sysbench_mysql create db
+  shell: 'mysqladmin --user={{ sysbench_mysql_user }} --password={{ sysbench_mysql_pass }} create {{ sysbench_mysql_dbname }}' 
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: sysbench_mysql prepare
+  shell: 'sysbench {{ sysbench_mysql_test }} --db-driver=mysql --mysql-user={{ sysbench_mysql_user }} --mysql-password={{ sysbench_mysql_pass }} --mysql-db={{ sysbench_mysql_dbname }} --db-ps-mode=disable --threads={{ sysbench_mysql_nthrds }} --tables={{ sysbench_mysql_ntbls }} --table-size={{ sysbench_mysql_tblsize }} prepare > /tmp/sysbench_mysql.prepare.out.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+- name: mark end of sysbench_mysql prepare
+  shell: 'echo -n "sysbench_mysql prepare done: " >> /tmp/sysbench_mysql.ts.txt; date >> /tmp/sysbench_mysql.ts.txt'
+  when: inventory_hostname == sysbench_mysql_client
+
+...

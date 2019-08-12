@@ -20,6 +20,11 @@
   - include_role:
       name: '{{ benchmark_name }}'
     vars:
+      benchmark_mode: prepare
+
+  - include_role:
+      name: '{{ benchmark_name }}'
+    vars:
       benchmark_mode: run
 
 ...

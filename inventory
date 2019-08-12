@@ -28,6 +28,7 @@ h31-740xd
 benchmark_name="fio_1client_seqio"
 # benchmark_name="fio_1client_randio"
 # benchmark_name="smallfile_1client"
+# benchmark_name="sysbench_mysql"
 # benchmark_name="pausefor_custombench"
 
 # calm options
@@ -63,4 +64,11 @@ smallfile_1client_nfiles=262144
 
 # pausefor_custombench options
 pausefor_custombench_wait_secs=600
+
+# sysbench_mysql options
+sysbench_mysql_pass="getyourown"
+sysbench_mysql_nthrds=64
+sysbench_mysql_tblsize=20000000
+sysbench_mysql_runtime=900
+sysbench_mysql_outintrvl=60
 

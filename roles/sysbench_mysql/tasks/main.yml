@@ -1,0 +1,9 @@
+---
+
+- include_tasks: prepare.yml
+  when: benchmark_mode == "prepare"
+
+- include_tasks: run.yml
+  when: benchmark_mode == "run"
+
+...
